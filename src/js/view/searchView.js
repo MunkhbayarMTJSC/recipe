@@ -23,7 +23,7 @@ const renderRecipe = (recipe) => {
 }
 
 const createButton = (page, type,direction) => `
-                <button class="btn-inline results__btn--${type}">
+                <button class="btn-inline results__btn--${type}" data-goto=${page}>
                     <span>Хуудас ${page}</span>
                     <svg class="search__icon">
                         <use href="img/icons.svg#icon-triangle-${direction}"></use>
@@ -37,6 +37,7 @@ export const clearInput = () => {
 
 export const clearResult = () => {
     elements.resultList.innerHTML = '';
+    elements.pageButtons.innerHTML = '';
 }
 
 export const getInput = () => elements.searchField.value;
@@ -55,17 +56,17 @@ const renderButtons = (currentPage, totalPages) => {
     let buttonHtml;
     if (currentPage === 1 && totalPages > 1) {
         // Өмнөх хуудас гэсэн товч хасаад дараах гэсэн товчийг гаргана
-        buttonHtml = createButton(1+1,'next','right')
+        buttonHtml = createButton(2,'next','right')
     }else if(currentPage < totalPages){
         // Аль аль товчийг гаргана
-        buttonHtml = createButton(totalPages-1, 'prev', 'left')
-        buttonHtml += createButton(totalPages+1, 'next','right')
+        buttonHtml = createButton(currentPage-1, 'prev', 'left')
+        buttonHtml += createButton(currentPage+1, 'next','right')
     }
     else if (currentPage === totalPages) {
         // Өмнөх хуудас товч харагдана дараах гэсэн товч харагдахгүй
         buttonHtml = createButton(totalPages-1, 'prev', 'left')
     } 
-    elements.pageButtons.insertAdjacentHTML('afterend', buttonHtml);
+    elements.pageButtons.insertAdjacentHTML('afterbegin', buttonHtml);
 }
 
 // Товчний type prev, next

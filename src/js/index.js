@@ -36,14 +36,13 @@ elements.searchForm.addEventListener('submit', (e) => {
     controllSearch();
 })
 
+
 elements.pageButtons.addEventListener('click', (e) => {
-    console.log('Дарсан товч:', e.target);
-});
-// elements.pageButtons.addEventListener('click', (e) => {
-//     const btn = e.target.closest('.btn-inline');
-//     console.log('Дарсан товч:', e.target);
-//     if (btn) {
-//         searchView.clearResult();
-//         searchView.renderRecipes(state.search.result,2)
-//     }
-// })
+    const btn = e.target.closest('.btn-inline');
+    if (btn) {
+        const pageNum = parseInt(btn.dataset.goto);
+        console.log(pageNum);
+        searchView.clearResult();
+        searchView.renderRecipes(state.search.result,pageNum)
+    }
+})
