@@ -35,3 +35,15 @@ elements.searchForm.addEventListener('submit', (e) => {
     e.preventDefault();
     controllSearch();
 })
+
+elements.pageButtons.addEventListener('click', (e) => {
+    console.log('Дарсан товч:', e.target);
+});
+// elements.pageButtons.addEventListener('click', (e) => {
+//     const btn = e.target.closest('.btn-inline');
+//     console.log('Дарсан товч:', e.target);
+//     if (btn) {
+//         searchView.clearResult();
+//         searchView.renderRecipes(state.search.result,2)
+//     }
+// })

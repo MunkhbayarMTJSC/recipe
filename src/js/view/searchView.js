@@ -22,6 +22,15 @@ const renderRecipe = (recipe) => {
     elements.resultList.insertAdjacentHTML('beforeend', markup);
 }
 
+const createButton = (page, type,direction) => `
+                <button class="btn-inline results__btn--${type}">
+                    <span>Хуудас ${page}</span>
+                    <svg class="search__icon">
+                        <use href="img/icons.svg#icon-triangle-${direction}"></use>
+                    </svg>
+                </button>
+                `;
+
 export const clearInput = () => {
     elements.searchField.value = '';
 }
@@ -32,6 +41,34 @@ export const clearResult = () => {
 
 export const getInput = () => elements.searchField.value;
 
-export const renderRecipes = recipes => {
-    recipes.forEach(renderRecipe);
+export const renderRecipes = (recipes, currentPage = 1, resPerPage = 10) => {
+    // Хайлтын үр дүнг хуудаслаж үзүүлэх
+    const start = (currentPage - 1) * resPerPage;
+    const end = currentPage * resPerPage;
+    recipes.slice(start, end).forEach(renderRecipe);
+    // Хуудаслалтын товчуудыг гаргаж ирэх
+    const totalPages = Math.ceil(recipes.length / resPerPage);
+    renderButtons(currentPage, totalPages);
 }
+
+const renderButtons = (currentPage, totalPages) => {
+    let buttonHtml;
+    if (currentPage === 1 && totalPages > 1) {
+        // Өмнөх хуудас гэсэн товч хасаад дараах гэсэн товчийг гаргана
+        buttonHtml = createButton(1+1,'next','right')
+    }else if(currentPage < totalPages){
+        // Аль аль товчийг гаргана
+        buttonHtml = createButton(totalPages-1, 'prev', 'left')
+        buttonHtml += createButton(totalPages+1, 'next','right')
+    }
+    else if (currentPage === totalPages) {
+        // Өмнөх хуудас товч харагдана дараах гэсэн товч харагдахгүй
+        buttonHtml = createButton(totalPages-1, 'prev', 'left')
+    } 
+    elements.pageButtons.insertAdjacentHTML('afterend', buttonHtml);
+}
+
+// Товчний type prev, next
+
+
+                
