@@ -1,6 +1,9 @@
 import Search from "./model/search";
 import { elements, renderLoader, clearLoader } from "./view/base";
 import * as searchView from "./view/searchView"
+import Recipe from "./model/recipe";
+import { renderRecipe, clearRecipe } from "./view/recipeView";
+
 /* 
     Вэб аппын төлөв
         Хайлтын query үр дүн
@@ -10,6 +13,9 @@ import * as searchView from "./view/searchView"
 */
 
 const state = {};
+/**
+ * Хайлтын контроллер
+ */
 const controllSearch = async () => {
     // Вэбээс хайлтын түлхүүр үгийг гаргаж авна
     const query = searchView.getInput();
@@ -46,3 +52,28 @@ elements.pageButtons.addEventListener('click', (e) => {
         searchView.renderRecipes(state.search.result,pageNum)
     }
 })
+
+/**
+ * Жорын контроллер
+ */
+const controlRecipe = async () => {
+    // URL- аас ID салгаж авна
+    const id = window.location.hash.replace('#','');
+    // Жорын моделийг үүсгэж өгнө
+    state.recipe = new Recipe(id);
+    // UI бэлтгэнэ
+    clearRecipe();
+    // Жороо татаж авчрана
+    renderLoader(elements.recipeDiv);
+    await state.recipe.getRecipe();
+    clearLoader();
+
+    // Жорыг гүйцэтгэх хугацаа болон орцыг тооцоолно
+    state.recipe.calcTime();
+    state.recipe.calcNumOfPeople();
+    // Жороо дэлгэцэнд харуулна
+    renderRecipe(state.recipe);
+}
+
+window.addEventListener('hashchange', controlRecipe);
+window.addEventListener('load', controlRecipe);
