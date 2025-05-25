@@ -93,8 +93,8 @@ const controllerList = () => {
     // Ур найрлагруу харагдаж байгаа жорын найрлагыг хийнэ
     listView.clearItem();
     state.recipe.ingredients.forEach(el => {
-        state.list.addItem(el);
-        listView.renderItem(el);
+        const item = state.list.addItem(el);
+        listView.renderItem(item);
     });
     // 
 }
@@ -103,4 +103,13 @@ elements.recipeDiv.addEventListener('click', (e) => {
     if (e.target.matches('.recipe__btn, .recipe__btn *')) {
         controllerList();
     }
+})
+
+elements.listItem.addEventListener('click', e => {
+    // клик хийсэн li элемэнтийн data-itemid аттрибутыг шүүж гаргаж авна
+    const id = e.target.closest(".shopping__item").dataset.itemid;
+    // олдсан ID тай найрлагыг моделоос устгана
+    state.list.removeItem(id);
+    // дэлгэцэн дээрээс устгана
+    listView.deleteItem(id);
 })
