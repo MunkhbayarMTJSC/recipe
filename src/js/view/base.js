@@ -5,7 +5,8 @@ export const elements = {
     searchResultDiv: document.querySelector('.results'),
     pageButtons: document.querySelector('.results__pages'),
     recipeDiv: document.querySelector('.recipe'),
-    ingredientsDiv: document.querySelector('.recipe__ingredient-list')
+    ingredientsDiv: document.querySelector('.recipe__ingredient-list'),
+    listItem: document.querySelector('.shopping__list')
 }
 export const elementStrings = {
     loader: 'loader'

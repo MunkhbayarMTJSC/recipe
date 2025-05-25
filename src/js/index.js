@@ -2,7 +2,9 @@ import Search from "./model/search";
 import { elements, renderLoader, clearLoader } from "./view/base";
 import * as searchView from "./view/searchView"
 import Recipe from "./model/recipe";
-import { renderRecipe, clearRecipe } from "./view/recipeView";
+import { renderRecipe, clearRecipe, activeRecipe } from "./view/recipeView";
+import List from "./model/list";
+import * as listView from "./view/listView";
 
 /* 
     Вэб аппын төлөв
@@ -59,21 +61,46 @@ elements.pageButtons.addEventListener('click', (e) => {
 const controlRecipe = async () => {
     // URL- аас ID салгаж авна
     const id = window.location.hash.replace('#','');
-    // Жорын моделийг үүсгэж өгнө
-    state.recipe = new Recipe(id);
-    // UI бэлтгэнэ
-    clearRecipe();
-    // Жороо татаж авчрана
-    renderLoader(elements.recipeDiv);
-    await state.recipe.getRecipe();
-    clearLoader();
+    if (id) {
+        // Жорын моделийг үүсгэж өгнө
+        state.recipe = new Recipe(id);
+        // UI бэлтгэнэ
+        clearRecipe();
+        activeRecipe(id);
+        // Жороо татаж авчрана
+        renderLoader(elements.recipeDiv);
+        await state.recipe.getRecipe();
+        clearLoader();
 
-    // Жорыг гүйцэтгэх хугацаа болон орцыг тооцоолно
-    state.recipe.calcTime();
-    state.recipe.calcNumOfPeople();
-    // Жороо дэлгэцэнд харуулна
-    renderRecipe(state.recipe);
+        // Жорыг гүйцэтгэх хугацаа болон орцыг тооцоолно
+        state.recipe.calcTime();
+        state.recipe.calcNumOfPeople();
+        // Жороо дэлгэцэнд харуулна
+        renderRecipe(state.recipe);
+    }
 }
 
-window.addEventListener('hashchange', controlRecipe);
-window.addEventListener('load', controlRecipe);
+['hashchange', 'load'].forEach(e => window.addEventListener(e, controlRecipe));
+
+/**
+ * Найрлагын контроллер
+ */
+
+const controllerList = () => {
+    // state.recipe.ingredients
+    // Найрлагны моделыг үүсгэнэ
+    state.list = new List();
+    // Ур найрлагруу харагдаж байгаа жорын найрлагыг хийнэ
+    listView.clearItem();
+    state.recipe.ingredients.forEach(el => {
+        state.list.addItem(el);
+        listView.renderItem(el);
+    });
+    // 
+}
+
+elements.recipeDiv.addEventListener('click', (e) => {
+    if (e.target.matches('.recipe__btn, .recipe__btn *')) {
+        controllerList();
+    }
+})

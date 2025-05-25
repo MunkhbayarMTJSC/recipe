@@ -13,6 +13,16 @@ const renderIngredient = ingredient => `
                     </li>
 `;
 
+export const activeRecipe = (id) => {
+    // Идэвхтэй байгаа жорыг тэмдэглэх функц
+    const array = Array.from(document.querySelectorAll('.results__link'));
+    array.forEach(el => el.classList.remove('results__link--active'))
+    const activeElement = document.querySelector(`a[href*="${id}"]`);
+    if (activeElement !== null) {
+        activeElement.classList.add('results__link--active');
+    }
+}
+
 export const renderRecipe = (recipe) => {
     // rendering recipe
     const html = `
