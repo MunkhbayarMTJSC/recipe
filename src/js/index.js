@@ -17,7 +17,6 @@ import Like from "./model/like";
 */
 
 const state = {};
-
 likeView.toggleLikeMenu(0);
 
 /**
@@ -65,10 +64,6 @@ elements.pageButtons.addEventListener('click', (e) => {
 const controlRecipe = async () => {
     // URL- аас ID салгаж авна
     const id = window.location.hash.replace('#', '');
-    
-    // Лайкын моделийг үүсгэнэ
-    if (!state.likes) state.likes = new Like();
-    
     if (id) {
         // Жорын моделийг үүсгэж өгнө
         state.recipe = new Recipe(id);
@@ -144,4 +139,11 @@ elements.listItem.addEventListener('click', e => {
     state.list.removeItem(id);
     // дэлгэцэн дээрээс устгана
     listView.deleteItem(id);
+})
+
+window.addEventListener('load', e => {
+    // Лайкын моделийг үүсгэнэ
+    if (!state.likes) state.likes = new Like();
+    likeView.toggleLikeMenu(state.likes.getNumOfLikes());
+    state.likes.likes.forEach(el => likeView.renderLike(el));
 })
