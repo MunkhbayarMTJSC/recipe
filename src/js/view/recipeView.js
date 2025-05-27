@@ -17,13 +17,13 @@ export const activeRecipe = (id) => {
     // Идэвхтэй байгаа жорыг тэмдэглэх функц
     const array = Array.from(document.querySelectorAll('.results__link'));
     array.forEach(el => el.classList.remove('results__link--active'))
-    const activeElement = document.querySelector(`a[href*="${id}"]`);
+    const activeElement = document.querySelector(`.results__link[href*="${id}"]`);
     if (activeElement !== null) {
         activeElement.classList.add('results__link--active');
     }
 }
 
-export const renderRecipe = (recipe) => {
+export const renderRecipe = (recipe, isLike) => {
     // rendering recipe
     const html = `
             <figure class="recipe__fig">
@@ -63,7 +63,7 @@ export const renderRecipe = (recipe) => {
                 </div>
                 <button class="recipe__love">
                     <svg class="header__likes">
-                        <use href="img/icons.svg#icon-heart-outlined"></use>
+                        <use href="img/icons.svg#icon-heart${isLike ? '' : '-outlined'}"></use>
                     </svg>
                 </button>
             </div>

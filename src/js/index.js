@@ -5,6 +5,8 @@ import Recipe from "./model/recipe";
 import { renderRecipe, clearRecipe, activeRecipe } from "./view/recipeView";
 import List from "./model/list";
 import * as listView from "./view/listView";
+import * as likeView from "./view/likeView"
+import Like from "./model/like";
 
 /* 
     Вэб аппын төлөв
@@ -15,6 +17,9 @@ import * as listView from "./view/listView";
 */
 
 const state = {};
+
+likeView.toggleLikeMenu(0);
+
 /**
  * Хайлтын контроллер
  */
@@ -49,7 +54,6 @@ elements.pageButtons.addEventListener('click', (e) => {
     const btn = e.target.closest('.btn-inline');
     if (btn) {
         const pageNum = parseInt(btn.dataset.goto);
-        console.log(pageNum);
         searchView.clearResult();
         searchView.renderRecipes(state.search.result,pageNum)
     }
@@ -60,7 +64,11 @@ elements.pageButtons.addEventListener('click', (e) => {
  */
 const controlRecipe = async () => {
     // URL- аас ID салгаж авна
-    const id = window.location.hash.replace('#','');
+    const id = window.location.hash.replace('#', '');
+    
+    // Лайкын моделийг үүсгэнэ
+    if (!state.likes) state.likes = new Like();
+    
     if (id) {
         // Жорын моделийг үүсгэж өгнө
         state.recipe = new Recipe(id);
@@ -76,7 +84,7 @@ const controlRecipe = async () => {
         state.recipe.calcTime();
         state.recipe.calcNumOfPeople();
         // Жороо дэлгэцэнд харуулна
-        renderRecipe(state.recipe);
+        renderRecipe(state.recipe, state.likes.isLiked(id));
     }
 }
 
@@ -99,9 +107,33 @@ const controllerList = () => {
     // 
 }
 
+//**
+// Like товчны контроллер
+//  */
+
+const controlLike = () => {
+    // Одоо харагдаж байгаа жорын ID-г олж авах
+    const currentRecipeID = state.recipe.id;
+    // Энэ жорыг лайк хийсэн эсэхийг шалгах
+    // Лайк хийсэн бол лайк авна үгүй бол дарна
+    if (state.likes.isLiked(currentRecipeID)) {
+        state.likes.removeLike(currentRecipeID);
+        likeView.removeLike(currentRecipeID);
+        likeView.toggleLikeButton(false)
+    } else {
+        const newLike = state.likes.addLike(currentRecipeID, state.recipe.title, state.recipe.publisher, state.recipe.image_url);
+        likeView.renderLike(newLike);
+        likeView.toggleLikeButton(true);
+    }
+    likeView.toggleLikeMenu(state.likes.getNumOfLikes());
+}
+
+
 elements.recipeDiv.addEventListener('click', (e) => {
     if (e.target.matches('.recipe__btn, .recipe__btn *')) {
         controllerList();
+    } else if(e.target.matches('.recipe__love, .recipe__love *')){
+        controlLike();
     }
 })
 

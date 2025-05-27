@@ -6,7 +6,9 @@ export const elements = {
     pageButtons: document.querySelector('.results__pages'),
     recipeDiv: document.querySelector('.recipe'),
     ingredientsDiv: document.querySelector('.recipe__ingredient-list'),
-    listItem: document.querySelector('.shopping__list')
+    listItem: document.querySelector('.shopping__list'),
+    likesMenu: document.querySelector('.likes__field'),
+    likesList: document.querySelector('.likes__list')
 }
 export const elementStrings = {
     loader: 'loader'
